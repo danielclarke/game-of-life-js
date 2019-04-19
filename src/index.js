@@ -13,21 +13,20 @@ animate();
 
 function init() {
 	camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.01, 1000 );
-	camera.position.z = 200;
+	camera.position.z = 100;
 
 	geometry = new THREE.BoxGeometry( 1, 1, 1 );
 	material = new THREE.MeshNormalMaterial();
 
 	scene = new THREE.Scene();
 
-	let num_cells = 20;
-	let n = 50;
+	let n = 100;
 
-	for(let i = 0; i < num_cells; i++) {
-		for(let j = 0; j < num_cells; j++) {
-			let x = Math.floor(Math.random() * n - n / 2) + 1;
-			let y = Math.floor(Math.random() * n - n / 2) + 1;
-			gol.world.insert(new Point(x, y));
+	for(let i = 0; i < n; i+=33) {
+		for(let j = 0; j < n; j++) {
+			// let x = Math.floor(Math.random() * n - n / 2) + 1;
+			// let y = Math.floor(Math.random() * n - n / 2) + 1;
+			gol.world.insert(new Point(i - n / 2, j - n / 2));
 		}
 	}
 
