@@ -104,9 +104,13 @@ export default class GameOfLife {
 // x: 1, y: -1
 
 export function glider() {
-    return [[1, 0, 1], [0, 1, 1], [0, 1, 0]]
+    return [[1, 0, 1], [0, 1, 1], [0, 1, 0]];
 }
 
 export function shoe() {
-	return [[1, 1, 1], [0, 0, 1], [1, 1, 1]]
+	return [[1, 1, 1], [0, 0, 1], [1, 1, 1]];
+}
+
+export function line() {
+    return [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]];
 }
