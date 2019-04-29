@@ -13,32 +13,39 @@ export default class QuadTree {
     }
 
     insert(point) {
-        if(!this.boundary.contains(point)) {
-            return false;
-        }
-
-        if(this.points.length < this.capacity && this.nw === null) {
-            this.points.push(point);
-            return true;
-        }
-
-        if (this.nw === null) {
-            this.subdivide();
-        }
-        if (this.nw.insert(point)) {
-            return true;
-        }
-        if (this.ne.insert(point)) {
-            return true;
-        }
-        if (this.se.insert(point)) {
-            return true;
-        }
-        if (this.sw.insert(point)) {
-            return true;
-        }
+        this.points.push(point);
+        return true;
         
-        return false;
+        // if(!this.boundary.contains(point)) {
+        //     return false;
+        // }
+
+        // if(this.points.length < this.capacity && this.nw === null) {
+        //     this.points.push(point);
+        //     return true;
+        // }
+
+        // if (this.nw === null) {
+        //     this.subdivide();
+        // }
+        // if (this.nw.insert(point)) {
+        //     this.points.push(point);
+        //     return true;
+        // }
+        // if (this.ne.insert(point)) {
+        //     this.points.push(point);
+        //     return true;
+        // }
+        // if (this.se.insert(point)) {
+        //     this.points.push(point);
+        //     return true;
+        // }
+        // if (this.sw.insert(point)) {
+        //     this.points.push(point);
+        //     return true;
+        // }
+        
+        // return false;
     }
 
     subdivide() {
@@ -62,7 +69,7 @@ export default class QuadTree {
 
             }
         }
-        this.points = [];
+        // this.points = [];
     }
 
     query(range) {
@@ -114,5 +121,13 @@ export default class QuadTree {
             )
         }
         return contained;
+    }
+
+    hash() {
+        this.points.forEach(
+            (point, index) => {
+                
+            }
+        )
     }
 }

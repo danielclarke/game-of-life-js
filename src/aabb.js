@@ -1,7 +1,10 @@
+import Point from "./point.js"
+
 export default class AABB {
     constructor (point, width) {
         this.point = point;
         this.width = width;
+        this.origin = new Point(point.x - width, point.y - width);
     }
 
     contains (point) {

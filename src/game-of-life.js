@@ -16,13 +16,73 @@ export default class GameOfLife {
     
         let cells = {};
         
-        this.world.query(this.world.boundary).forEach(
+        // this.world.query(this.world.boundary).forEach(
+        // this.world.points.forEach(
+        //     (cell, index) => {
+        //         if (!(cell.x in cells)) {
+        //             cells[cell.x] = {};
+        //         }
+        //         cells[cell.x][cell.y] = 1;
+    
+        //         if (!(cell.x - 1 in cells)) {
+        //             cells[cell.x - 1] = {};
+        //         }
+        //         if (!(cell.x + 1 in cells)) {
+        //             cells[cell.x + 1] = {};
+        //         }
+    
+        //         if (!(cell.y - 1 in cells[cell.x - 1])) {
+        //             cells[cell.x - 1][cell.y - 1] = 0;
+        //         }
+        //         if (!(cell.y - 1 in cells[cell.x])) {
+        //             cells[cell.x][cell.y - 1] = 0;
+        //         }
+        //         if (!(cell.y - 1 in cells[cell.x + 1])) {
+        //             cells[cell.x + 1][cell.y - 1] = 0;
+        //         }
+        //         if (!(cell.y in cells[cell.x - 1])) {
+        //             cells[cell.x - 1][cell.y] = 0;
+        //         }
+        //         if (!(cell.y in cells[cell.x])) {
+        //             cells[cell.x][cell.y] = 0;
+        //         }
+        //         if (!(cell.y in cells[cell.x + 1])) {
+        //             cells[cell.x + 1][cell.y] = 0;
+        //         }
+        //         if (!(cell.y + 1 in cells[cell.x - 1])) {
+        //             cells[cell.x - 1][cell.y + 1] = 0;
+        //         }
+        //         if (!(cell.y + 1 in cells[cell.x])) {
+        //             cells[cell.x][cell.y + 1] = 0;
+        //         }
+        //         if (!(cell.y + 1 in cells[cell.x + 1])) {
+        //             cells[cell.x + 1][cell.y + 1] = 0;
+        //         }
+        //     }
+        // )
+        
+        // Object.keys(cells).forEach(
+        //     (x, index) => {
+        //         Object.keys(cells[x]).forEach(
+        //             (y, index) => {
+        //                 let cell = new Point(parseInt(x), parseInt(y));
+        //                 let population = this.world.query(new AABB(cell, 1.5)).length - cells[x][y];
+        //                 if ((cells[x][y] === 1 && population === 2) || population === 3) {
+        //                     updated_world.insert(cell);
+        //                 }
+        //             }
+        //         )
+        //     }
+        // )
+    
+        // this.world = updated_world;
+
+        this.world.points.forEach(
             (cell, index) => {
+
                 if (!(cell.x in cells)) {
                     cells[cell.x] = {};
                 }
-                cells[cell.x][cell.y] = 1;
-    
                 if (!(cell.x - 1 in cells)) {
                     cells[cell.x - 1] = {};
                 }
@@ -30,43 +90,61 @@ export default class GameOfLife {
                     cells[cell.x + 1] = {};
                 }
     
+                if (!(cell.y in cells[cell.x])) {
+                    cells[cell.x][cell.y] = {"population": 0, "value": 1};
+                } else {
+                    cells[cell.x][cell.y]["value"] = 1;
+                }
+                
                 if (!(cell.y - 1 in cells[cell.x - 1])) {
-                    cells[cell.x - 1][cell.y - 1] = 0;
+                    cells[cell.x - 1][cell.y - 1] = {"population": 1, "value": 0};
+                } else {
+                    cells[cell.x - 1][cell.y - 1]["population"] += 1;
                 }
                 if (!(cell.y - 1 in cells[cell.x])) {
-                    cells[cell.x][cell.y - 1] = 0;
+                    cells[cell.x][cell.y - 1] = {"population": 1, "value": 0};
+                } else {
+                    cells[cell.x][cell.y - 1]["population"] += 1;
                 }
                 if (!(cell.y - 1 in cells[cell.x + 1])) {
-                    cells[cell.x + 1][cell.y - 1] = 0;
+                    cells[cell.x + 1][cell.y - 1] = {"population": 1, "value": 0};
+                } else {
+                    cells[cell.x + 1][cell.y - 1]["population"] += 1;
                 }
                 if (!(cell.y in cells[cell.x - 1])) {
-                    cells[cell.x - 1][cell.y] = 0;
-                }
-                if (!(cell.y in cells[cell.x])) {
-                    cells[cell.x][cell.y] = 0;
+                    cells[cell.x - 1][cell.y] = {"population": 1, "value": 0};
+                } else {
+                    cells[cell.x - 1][cell.y]["population"] += 1;
                 }
                 if (!(cell.y in cells[cell.x + 1])) {
-                    cells[cell.x + 1][cell.y] = 0;
+                    cells[cell.x + 1][cell.y] = {"population": 1, "value": 0};
+                } else {
+                    cells[cell.x + 1][cell.y]["population"] += 1;
                 }
                 if (!(cell.y + 1 in cells[cell.x - 1])) {
-                    cells[cell.x - 1][cell.y + 1] = 0;
+                    cells[cell.x - 1][cell.y + 1] = {"population": 1, "value": 0};
+                } else {
+                    cells[cell.x - 1][cell.y + 1]["population"] += 1;
                 }
                 if (!(cell.y + 1 in cells[cell.x])) {
-                    cells[cell.x][cell.y + 1] = 0;
+                    cells[cell.x][cell.y + 1] = {"population": 1, "value": 0};
+                } else {
+                    cells[cell.x][cell.y + 1]["population"] += 1;
                 }
                 if (!(cell.y + 1 in cells[cell.x + 1])) {
-                    cells[cell.x + 1][cell.y + 1] = 0;
+                    cells[cell.x + 1][cell.y + 1] = {"population": 1, "value": 0};
+                } else {
+                    cells[cell.x + 1][cell.y + 1]["population"] += 1;
                 }
             }
         )
-        
+
         Object.keys(cells).forEach(
             (x, index) => {
                 Object.keys(cells[x]).forEach(
                     (y, index) => {
-                        let cell = new Point(parseInt(x), parseInt(y));
-                        let population = this.world.query(new AABB(cell, 1.5)).length - cells[x][y];
-                        if ((cells[x][y] === 1 && population === 2) || population === 3) {
+                        if ((cells[x][y]["value"] === 1 && cells[x][y]["population"] === 2) || cells[x][y]["population"] === 3) {
+                            let cell = new Point(parseInt(x), parseInt(y));
                             updated_world.insert(cell);
                         }
                     }

@@ -15,7 +15,7 @@ animate();
 
 function init() {
 	camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.01, 1000 );
-	camera.position.z = 100;
+	camera.position.z = 200;
 
 	geometry = new THREE.BoxGeometry( 1, 1, 1 );
 	material = new THREE.MeshNormalMaterial();
@@ -30,43 +30,9 @@ function init() {
 			// let x = Math.floor(Math.random() * n - n / 2) + 1;
 			// let y = Math.floor(Math.random() * n - n / 2) + 1;
 			gol.add_creature(line(), i * 20 - 100, j * 20 - 100);
-			// gol.world.insert(new Point(i - n / 2, j * 10 - m / 2));
+			// gol.world.insert(new Point(i - n / 2, j * 10 - (m * 10) / 2));
 		}
 	}
-
-	// let points = [];
-	// let num_cells = 35;
-	// let n = 8;
-	// let m = 0;
-
-	// while(world.query(world.boundary).length < 500) {
-	// 	m += 1;
-
-	// 	world = empty_world(1000);
-	// 	points = [];
-
-	// 	for(let i = 0; i < num_cells; i++) {
-	// 		let x = Math.floor(Math.random() * n - n / 2) + 1;
-	// 		let y = Math.floor(Math.random() * n - n / 2) + 1;
-	// 		// add_creature(world, shoe(), x, y);
-	// 		let p = new Point(x, y);
-	// 		points.push(p);
-	// 		world.insert(p);
-	// 	}
-
-	// 	for (let i = 0; i < 500; i++) {
-	// 		world = update(world);
-	// 	}
-	// }
-
-	// world = empty_world(1000);
-	// console.log(m);
-	// points.forEach(
-	// 	(p, index) => {
-	// 		world.insert(p);
-	// 		console.log(`${p.x}, ${p.y}`);
-	// 	}
-	// )
 
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setSize( window.innerWidth, window.innerHeight );
@@ -76,12 +42,7 @@ function init() {
 
 function animate() {
 
-	// generation_d.textContent = parseInt(generation_d.textContent) + 1;
-	// population_d.textContent = gol.world.query(gol.world.boundary).length;
-
 	requestAnimationFrame( animate );
-	
-	// scene.children.forEach(function(child) { scene.remove(child); });
 
 	render_world(scene, gol.world);
 	gol.update();
@@ -90,14 +51,7 @@ function animate() {
 }
 
 function render_world(scene, world) {
-	let cells = world.query(world.boundary);
-	// cells.forEach(
-	// 	(cell, index) => {
-	// 		add_cell(scene, cell.x, cell.y);
-	// 	}
-	// )
-
-	while (cubes.length < cells.length) {
+	while (cubes.length < world.points.length) {
 		cubes.push(new THREE.Mesh(geometry, material));
 		scene.add(cubes[cubes.length - 1]);
 	}
@@ -106,7 +60,7 @@ function render_world(scene, world) {
 		cube.visible = false;
 	}
 
-	cells.forEach(
+	world.points.forEach(
 		(cell, index) => {
 			cubes[index].position.set(cell.x, cell.y, 0);
 			cubes[index].visible = true;
