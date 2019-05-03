@@ -28,7 +28,7 @@ function binary_search(ary, value) {
     }
 }
 
-function selection(population) {
+function select(population, num_selected) {
     let selected = [];
     let scores = [];
 
@@ -38,29 +38,41 @@ function selection(population) {
 
     scores = [0].concat(normalise(cumulative_sum(scores)));
 
-    for (let i = 0; i < population.length; i++) {
+    for (let i = 0; i < num_selected; i++) {
         selected.push(population[binary_search(scores, Math.random())]);   
     }
 
     return selected;
 }
 
+// function crossover(parents) {
+//     const n = parents[0].cells.length;
+//     let cells = [];
+//     let genotype = new Map();
+
+//     for (parent of parents) {
+//         cells = cells.concat(parent.cells);
+//     }
+
+//     while (map.length < n) {
+//         let cell = cells[Math.ceil(Math.random() * n)];
+//         if (!map.has(`${cell.x}, ${cell.y}`)) {
+//             map.set(`${cell.x}, ${cell.y}`, cell);
+//         }
+//     }
+//     return genotype.values();
+// }
+
 function crossover(parents) {
-    const n = parents[0].cells.length;
-    let cells = [];
-    let genotype = new Map();
+    return parents.reduce((accumulator, value, index) => accumulator + value / parents.length, 0);
+}
 
-    for (parent of parents) {
-        cells = cells.concat(parent.cells);
+function breed(selection, num_parents) {
+    let children = [];
+    for (let i = 0; i < selection.length; i += num_parents) {
+        children = children.concat(crossover(selection.slice(i, i + num_parents)));
     }
-
-    while (map.length < n) {
-        let cell = cells[Math.ceil(Math.random() * n)];
-        if (!map.has(`${cell.x}, ${cell.y}`)) {
-            map.set(`${cell.x}, ${cell.y}`, cell);
-        }
-    }
-    return genotype.values();
+    return children;
 }
 
 function mutate(child) {
@@ -74,5 +86,6 @@ function mutate(child) {
 }
 
 function reproduction(population) {
-
+    let num_parents = 2;
+    return breed(select(population, population.length * num_parents), num_parents);
 }
