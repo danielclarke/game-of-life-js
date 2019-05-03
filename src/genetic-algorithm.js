@@ -85,7 +85,17 @@ function mutate(child) {
     )
 }
 
-function reproduction(population) {
+function reproduce(population) {
     let num_parents = 2;
     return breed(select(population, population.length * num_parents), num_parents);
 }
+
+// let pop = [];
+
+// for (let i = 0; i < 1000; i++) {
+//     pop.push(Math.random());
+// }
+
+// for (let j = 0; j < 20; j++) {
+//     pop = reproduce(pop);
+// }
