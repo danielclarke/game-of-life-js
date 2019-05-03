@@ -1,10 +1,31 @@
+function cumulative_sum(scores) {
+    return scores.reduce((accumulator, value, index) => [...accumulator, value + (accumulator[index - 1] || 0)], [])
+}
+
 function normalise(scores) {
     const maxScore = Math.max(...scores);
     return scores.map(score => score / maxScore);
 }
 
-function evalute(member) {
-    return 0;
+function evaluate(member) {
+    return member;
+}
+
+function binary_search(ary, value) {
+
+    if (ary.length == 1) {
+        return 0;
+    }
+
+    if (ary.length == 0) {
+        return;
+    }
+
+    if (value < ary[Math.floor(ary.length / 2)]) {
+        return binary_search(ary.slice(0, Math.floor(ary.length / 2)), value);
+    } else {
+        return Math.floor(ary.length / 2) + binary_search(ary.slice(Math.floor(ary.length / 2), ary.length), value);
+    }
 }
 
 function selection(population) {
@@ -15,14 +36,10 @@ function selection(population) {
         scores.push(evaluate(member));
     }
 
-    scores = normalise(scores);
+    scores = [0].concat(normalise(cumulative_sum(scores)));
 
-    while (selected.length < population.length) {
-        for (const [index, score] of scores.entries) {
-            if (Math.random() < score) {
-                selected.push(population[index]);
-            }
-        }
+    for (let i = 0; i < population.length; i++) {
+        selected.push(population[binary_search(scores, Math.random())]);   
     }
 
     return selected;
@@ -46,8 +63,14 @@ function crossover(parents) {
     return genotype.values();
 }
 
-function mutate(children) {
+function mutate(child) {
+    return cells.forEach(
+        function(cell) {
+            if (Math.random() > mutation_rate) {
 
+            }
+        }
+    )
 }
 
 function reproduction(population) {
