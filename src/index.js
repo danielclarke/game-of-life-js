@@ -23,8 +23,10 @@ function init() {
 
 	scene = new THREE.Scene();
 
-	let creature = evolveCreature(5, 3, 20, 100);
-	gol.addCreature(creature);
+	let creatureCoordinates = evolveCreature(5, 3, 5, 20);
+	let creature = generateCreatureFromCoordinates(creatureCoordinates);
+	console.log(creature);
+	gol.addCreature(creature, 0, 0);
 
 	// let n = 10;
 	// let m = 10;
@@ -33,7 +35,7 @@ function init() {
 	// 	for(let j = 0; j < m; j++) {
 	// 		// let x = Math.floor(Math.random() * n - n / 2) + 1;
 	// 		// let y = Math.floor(Math.random() * n - n / 2) + 1;
-	// 		gol.addCreature(line(), i * 20 - 100, j * 20 - 100);
+			// gol.addCreature(line(), i * 20 - 100, j * 20 - 100);
 	// 		// gol.world.insert(new Point(i - n / 2, j * 10 - (m * 10) / 2));
 	// 	}
 	// }
@@ -73,12 +75,12 @@ function renderWorld(scene, world) {
 }
 
 function evaluate(creatureCoordinates) {
-	let creature = generateCreateFromCoordinates(creatureCoordinates);
+	let creature = generateCreatureFromCoordinates(creatureCoordinates);
 	let gol = new GameOfLife();
 	gol.addCreature(creature, 0, 0);
 
 	let maxCells = 0;
-	for (let i = 0; i < 200; i++) {
+	for (let i = 0; i < 400; i++) {
 		gol.update();
 		maxCells = Math.max(maxCells, gol.world.points.length);
 	}
@@ -104,7 +106,7 @@ function generateCreatureCoordinates(numCells, size) {
 	return creatureCoordinates;
 }
 
-function generateCreateFromCoordinates(creatureCoordinates) {
+function generateCreatureFromCoordinates(creatureCoordinates) {
 	let size = 0;
 	let creature = [];
 

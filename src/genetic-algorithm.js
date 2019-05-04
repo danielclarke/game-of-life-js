@@ -7,10 +7,6 @@ function normalise(scores) {
     return scores.map(score => score / maxScore);
 }
 
-// function evaluate(member) {
-//     return member;
-// }
-
 function binarySearch(ary, value) {
 
     if (ary.length == 1) {
@@ -42,10 +38,6 @@ function select(population, numToSelect, evaluate) {
         selected.push(population[binarySearch(scores, Math.random())]);   
     }
 
-    // console.log(population);
-    // console.log(scores);
-    // console.log(selected);
-
     return selected;
 }
 
@@ -70,15 +62,10 @@ function crossover(parents) {
     return child;
 }
 
-// function crossover(parents) {
-//     return parents.reduce((accumulator, value, index) => accumulator + value / parents.length, 0);
-// }
-
 function breed(selection, numParents) {
     let children = [];
     for (let i = 0; i < selection.length; i += numParents) {
-        console.log(`crossover: ${i}`);
-        children = children.concat(crossover(selection.slice(i, i + numParents)));
+        children.push(crossover(selection.slice(i, i + numParents)));
     }
     return children;
 }
@@ -98,9 +85,9 @@ function reproduce(population, evaluate) {
     return breed(select(population, population.length * numParents, evaluate), numParents);
 }
 
-export default function evolve(population, evaluate, numIterations) {
-    for (let i = 0; i < numIterations; i++) {
-        console.log(`iteration: ${i}`);
+export default function evolve(population, evaluate, numGenerations) {
+    for (let i = 0; i < numGenerations; i++) {
+        console.log(`generation: ${i}`);
         population = reproduce(population, evaluate);
     }
     return population;
