@@ -2,6 +2,7 @@ import Point from "./point.js";
 import AABB from "./aabb.js";
 import QuadTree from "./quadtree.js"
 
+
 export default class GameOfLife {
     constructor() {
         let p = new Point(0, 0);
@@ -12,7 +13,7 @@ export default class GameOfLife {
     update() {
         let p = new Point(0, 0);
         let aabb = new AABB(p, this.world.boundary.width);
-        let updated_world = new QuadTree(1, aabb);
+        let updatedWorld = new QuadTree(1, aabb);
     
         let cells = {};
         
@@ -68,14 +69,14 @@ export default class GameOfLife {
         //                 let cell = new Point(parseInt(x), parseInt(y));
         //                 let population = this.world.query(new AABB(cell, 1.5)).length - cells[x][y];
         //                 if ((cells[x][y] === 1 && population === 2) || population === 3) {
-        //                     updated_world.insert(cell);
+        //                     updatedWorld.insert(cell);
         //                 }
         //             }
         //         )
         //     }
         // )
     
-        // this.world = updated_world;
+        // this.world = updatedWorld;
 
         this.world.points.forEach(
             (cell, index) => {
@@ -145,17 +146,17 @@ export default class GameOfLife {
                     (y, index) => {
                         if ((cells[x][y]["value"] === 1 && cells[x][y]["population"] === 2) || cells[x][y]["population"] === 3) {
                             let cell = new Point(parseInt(x), parseInt(y));
-                            updated_world.insert(cell);
+                            updatedWorld.insert(cell);
                         }
                     }
                 )
             }
         )
     
-        this.world = updated_world;
+        this.world = updatedWorld;
     }
 
-    add_creature(creature, x, y) {
+    addCreature(creature, x, y) {
         for(let i = 0; i < creature.length; i++) {
             for(let j = 0; j < creature[i].length; j++) {
                 if (creature[i][j]) {

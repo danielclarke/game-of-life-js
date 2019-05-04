@@ -1,4 +1,4 @@
-function cumulative_sum(scores) {
+function cumulativeSum(scores) {
     return scores.reduce((accumulator, value, index) => [...accumulator, value + (accumulator[index - 1] || 0)], [])
 }
 
@@ -7,11 +7,11 @@ function normalise(scores) {
     return scores.map(score => score / maxScore);
 }
 
-function evaluate(member) {
-    return member;
-}
+// function evaluate(member) {
+//     return member;
+// }
 
-function binary_search(ary, value) {
+function binarySearch(ary, value) {
 
     if (ary.length == 1) {
         return 0;
@@ -22,13 +22,13 @@ function binary_search(ary, value) {
     }
 
     if (value < ary[Math.floor(ary.length / 2)]) {
-        return binary_search(ary.slice(0, Math.floor(ary.length / 2)), value);
+        return binarySearch(ary.slice(0, Math.floor(ary.length / 2)), value);
     } else {
-        return Math.floor(ary.length / 2) + binary_search(ary.slice(Math.floor(ary.length / 2), ary.length), value);
+        return Math.floor(ary.length / 2) + binarySearch(ary.slice(Math.floor(ary.length / 2), ary.length), value);
     }
 }
 
-function select(population, num_selected) {
+function select(population, numToSelect, evaluate) {
     let selected = [];
     let scores = [];
 
@@ -36,41 +36,49 @@ function select(population, num_selected) {
         scores.push(evaluate(member));
     }
 
-    scores = [0].concat(normalise(cumulative_sum(scores)));
+    scores = [0].concat(normalise(cumulativeSum(scores)));
 
-    for (let i = 0; i < num_selected; i++) {
-        selected.push(population[binary_search(scores, Math.random())]);   
+    for (let i = 0; i < numToSelect; i++) {
+        selected.push(population[binarySearch(scores, Math.random())]);   
     }
+
+    // console.log(population);
+    // console.log(scores);
+    // console.log(selected);
 
     return selected;
 }
 
-// function crossover(parents) {
-//     const n = parents[0].cells.length;
-//     let cells = [];
-//     let genotype = new Map();
-
-//     for (parent of parents) {
-//         cells = cells.concat(parent.cells);
-//     }
-
-//     while (map.length < n) {
-//         let cell = cells[Math.ceil(Math.random() * n)];
-//         if (!map.has(`${cell.x}, ${cell.y}`)) {
-//             map.set(`${cell.x}, ${cell.y}`, cell);
-//         }
-//     }
-//     return genotype.values();
-// }
-
 function crossover(parents) {
-    return parents.reduce((accumulator, value, index) => accumulator + value / parents.length, 0);
+    const n = parents[0].length;
+    let cells = [];
+    let genotype = {};
+    let child = [];
+
+    for (parent of parents) {
+        cells = cells.concat(parent);
+    }
+
+    while (child.length < n) {
+        let [x, y] = cells.splice(Math.floor(Math.random() * cells.length), 1)[0];
+        if (!(`${x}, ${y}` in genotype)) {
+            genotype[`${x}, ${y}`] = [x, y];
+            child.push([x, y]);
+        }
+    }
+
+    return child;
 }
 
-function breed(selection, num_parents) {
+// function crossover(parents) {
+//     return parents.reduce((accumulator, value, index) => accumulator + value / parents.length, 0);
+// }
+
+function breed(selection, numParents) {
     let children = [];
-    for (let i = 0; i < selection.length; i += num_parents) {
-        children = children.concat(crossover(selection.slice(i, i + num_parents)));
+    for (let i = 0; i < selection.length; i += numParents) {
+        console.log(`crossover: ${i}`);
+        children = children.concat(crossover(selection.slice(i, i + numParents)));
     }
     return children;
 }
@@ -78,16 +86,24 @@ function breed(selection, num_parents) {
 function mutate(child) {
     return cells.forEach(
         function(cell) {
-            if (Math.random() > mutation_rate) {
+            if (Math.random() > mutationRate) {
 
             }
         }
     )
 }
 
-function reproduce(population) {
-    let num_parents = 2;
-    return breed(select(population, population.length * num_parents), num_parents);
+function reproduce(population, evaluate) {
+    let numParents = 2;
+    return breed(select(population, population.length * numParents, evaluate), numParents);
+}
+
+export default function evolve(population, evaluate, numIterations) {
+    for (let i = 0; i < numIterations; i++) {
+        console.log(`iteration: ${i}`);
+        population = reproduce(population, evaluate);
+    }
+    return population;
 }
 
 // let pop = [];

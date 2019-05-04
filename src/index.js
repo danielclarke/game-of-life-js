@@ -1,5 +1,6 @@
 import Point from "./point.js";
 import GameOfLife, {glider, shoe, line} from "./game-of-life.js"
+import evolve from "./genetic-algorithm.js"
 
 var camera, scene, renderer;
 var geometry, material, mesh;
@@ -22,17 +23,20 @@ function init() {
 
 	scene = new THREE.Scene();
 
-	let n = 10;
-	let m = 10;
+	let creature = evolveCreature(5, 3, 20, 100);
+	gol.addCreature(creature);
 
-	for(let i = 0; i < n; i++) {
-		for(let j = 0; j < m; j++) {
-			// let x = Math.floor(Math.random() * n - n / 2) + 1;
-			// let y = Math.floor(Math.random() * n - n / 2) + 1;
-			gol.add_creature(line(), i * 20 - 100, j * 20 - 100);
-			// gol.world.insert(new Point(i - n / 2, j * 10 - (m * 10) / 2));
-		}
-	}
+	// let n = 10;
+	// let m = 10;
+
+	// for(let i = 0; i < n; i++) {
+	// 	for(let j = 0; j < m; j++) {
+	// 		// let x = Math.floor(Math.random() * n - n / 2) + 1;
+	// 		// let y = Math.floor(Math.random() * n - n / 2) + 1;
+	// 		gol.addCreature(line(), i * 20 - 100, j * 20 - 100);
+	// 		// gol.world.insert(new Point(i - n / 2, j * 10 - (m * 10) / 2));
+	// 	}
+	// }
 
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setSize( window.innerWidth, window.innerHeight );
@@ -44,13 +48,13 @@ function animate() {
 
 	requestAnimationFrame( animate );
 
-	render_world(scene, gol.world);
+	renderWorld(scene, gol.world);
 	gol.update();
 
 	renderer.render( scene, camera );
 }
 
-function render_world(scene, world) {
+function renderWorld(scene, world) {
 	while (cubes.length < world.points.length) {
 		cubes.push(new THREE.Mesh(geometry, material));
 		scene.add(cubes[cubes.length - 1]);
@@ -68,9 +72,70 @@ function render_world(scene, world) {
 	)
 }
 
-function add_cell(scene, x, y) {
-	let cell = new THREE.Mesh(geometry, material);
-	scene.add( cell );
-	cell.translateX(x);
-	cell.translateY(y);
+function evaluate(creatureCoordinates) {
+	let creature = generateCreateFromCoordinates(creatureCoordinates);
+	let gol = new GameOfLife();
+	gol.addCreature(creature, 0, 0);
+
+	let maxCells = 0;
+	for (let i = 0; i < 200; i++) {
+		gol.update();
+		maxCells = Math.max(maxCells, gol.world.points.length);
+	}
+
+	return maxCells;
+}
+
+function generateCreatureCoordinates(numCells, size) {
+
+	let coordinates = [];
+	let creatureCoordinates = []
+
+	for (let i = 0; i < size; i++) {
+		for (let j = 0; j < size; j++) {
+			coordinates.push([i, j]);
+		}
+	}
+
+	for (let i = 0; i < numCells; i++) {
+		creatureCoordinates.push(coordinates.splice(Math.floor(Math.random() * coordinates.length), 1)[0]);
+	}
+
+	return creatureCoordinates;
+}
+
+function generateCreateFromCoordinates(creatureCoordinates) {
+	let size = 0;
+	let creature = [];
+
+	for (let [x, y] of creatureCoordinates) {
+		size = Math.max(size, x, y);
+	}
+
+	for (let i = 0; i < size + 1; i++) {
+		creature.push([]);
+		for (let j = 0; j < size + 1; j++) {
+			creature[i].push(0);
+		}
+	}
+
+	for (let [x, y] of creatureCoordinates) {
+		creature[x][y] = 1;
+	}
+
+	return creature;
+
+}
+
+function evolveCreature(numCells, size, numIterations, populationSize) {
+	let population = [];
+	for (let i = 0; i < populationSize; i++) {
+		population.push(generateCreatureCoordinates(numCells, size));
+	}
+
+	population = evolve(population, evaluate, numIterations);
+
+	console.log(population[0]);
+
+	return population[0];
 }
