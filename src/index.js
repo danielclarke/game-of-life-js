@@ -80,7 +80,7 @@ function evaluate(creatureCoordinates) {
 	gol.addCreature(creature, 0, 0);
 
 	let maxCells = 0;
-	for (let i = 0; i < 400; i++) {
+	for (let i = 0; i < 200; i++) {
 		gol.update();
 		maxCells = Math.max(maxCells, gol.world.points.length);
 	}
@@ -131,13 +131,24 @@ function generateCreatureFromCoordinates(creatureCoordinates) {
 
 function evolveCreature(numCells, size, numIterations, populationSize) {
 	let population = [];
+	let fittest;
+	let score = 0;
+
 	for (let i = 0; i < populationSize; i++) {
 		population.push(generateCreatureCoordinates(numCells, size));
 	}
 
 	population = evolve(population, evaluate, numIterations);
 
-	console.log(population[0]);
+	for (let member of population) {
+		let s = evaluate(member);
+		if (s > score) {
+			score = s;
+			fittest = member;
+		}
+	}
 
-	return population[0];
+	console.log(fittest);
+
+	return fittest;
 }
