@@ -5,7 +5,11 @@ import evolve from "./genetic-algorithm.js"
 var camera, scene, renderer;
 var geometry, material, mesh;
 
+let population = [];
+
 let cubes = [];
+let period = 200;
+let iPeriod = 0;
 
 let gol = new GameOfLife();
 // const generation_d = document.querySelector('.generation');
@@ -16,17 +20,27 @@ animate();
 
 function init() {
 	camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.01, 1000 );
-	camera.position.z = 200;
+	camera.position.z = 100;
 
 	geometry = new THREE.BoxGeometry( 1, 1, 1 );
 	material = new THREE.MeshNormalMaterial();
 
 	scene = new THREE.Scene();
 
-	let creatureCoordinates = evolveCreature(5, 3, 5, 20);
-	let creature = generateCreatureFromCoordinates(creatureCoordinates);
-	console.log(creature);
-	gol.addCreature(creature, 0, 0);
+	// let creatureCoordinates = evolveCreature(5, 3, 5, 20);
+	// let creature = generateCreatureFromCoordinates(creatureCoordinates);
+	// console.log(creature);
+	// gol.addCreature(creature, 0, 0);
+
+	population = evolveCreature(5, 3, 5, 20);
+
+	// population.forEach(
+	// 	(creatureCoordinates, index) => {
+	// 		let creature = generateCreatureFromCoordinates(creatureCoordinates);
+	// 		console.log(creature);
+	// 		gol.addCreature(creature, 0, index * 4);
+	// 	}
+	// )
 
 	// let n = 10;
 	// let m = 10;
@@ -50,10 +64,29 @@ function animate() {
 
 	requestAnimationFrame( animate );
 
+	if (iPeriod === 0) {
+		gol = new GameOfLife();
+		let creature = generateCreatureFromCoordinates(population.splice(0, 1)[0]);
+		gol.addCreature(creature, 0, 0)
+	}
+
+	iPeriod += 1;
+	
+	if (iPeriod === period) {
+		iPeriod = 0;
+	}
+
 	renderWorld(scene, gol.world);
 	gol.update();
 
 	renderer.render( scene, camera );
+
+	// requestAnimationFrame( animate );
+
+	// renderWorld(scene, gol.world);
+	// // gol.update();
+
+	// renderer.render( scene, camera );
 }
 
 function renderWorld(scene, world) {
@@ -140,15 +173,17 @@ function evolveCreature(numCells, size, numIterations, populationSize) {
 
 	population = evolve(population, evaluate, numIterations);
 
-	for (let member of population) {
-		let s = evaluate(member);
-		if (s > score) {
-			score = s;
-			fittest = member;
-		}
-	}
+	return population;
 
-	console.log(fittest);
+	// for (let member of population) {
+	// 	let s = evaluate(member);
+	// 	if (s > score) {
+	// 		score = s;
+	// 		fittest = member;
+	// 	}
+	// }
 
-	return fittest;
+	// console.log(fittest);
+
+	// return fittest;
 }
