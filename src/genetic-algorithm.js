@@ -84,8 +84,8 @@ function mutate(population, mutationRate) {
 
         for (let [x, y] of child) {
             if (Math.random() <= mutationRate) {
-                let u = Math.floor(Math.random() * width);
-                let v = Math.floor(Math.random() * width);
+                let u = Math.floor(Math.random() * (width + 1));
+                let v = Math.floor(Math.random() * (width + 1));
 
                 if (!(`${u}, ${v}` in genotype)) {
                     genotype[`${u}, ${v}`] = [u, v];
