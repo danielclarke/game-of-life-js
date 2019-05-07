@@ -32,7 +32,7 @@ function init() {
 	// console.log(creature);
 	// gol.addCreature(creature, 0, 0);
 
-	population = evolveCreature(5, 3, 5, 20);
+	population = evolveCreature(5, 3, 5, 100);
 
 	// population.forEach(
 	// 	(creatureCoordinates, index) => {
@@ -171,7 +171,7 @@ function evolveCreature(numCells, size, numIterations, populationSize) {
 		population.push(generateCreatureCoordinates(numCells, size));
 	}
 
-	population = evolve(population, evaluate, numIterations);
+	population = evolve(population, evaluate, numIterations, 0.01);
 
 	return population;
 

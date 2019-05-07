@@ -70,14 +70,39 @@ function breed(selection, numParents) {
     return children;
 }
 
-function mutate(child) {
-    return cells.forEach(
-        function(cell) {
-            if (Math.random() > mutationRate) {
+function mutate(population, mutationRate) {
+    let mutated = []
+    for (let child of population) {
+        let genotype = {};
+        let width = 0;
+        let mutation = [];
 
+        for (let [x, y] of child) {
+            genotype[`${x}, ${y}`] = [x, y];
+            width = Math.max(width, x, y);
+        }
+
+        for (let [x, y] of child) {
+            if (Math.random() <= mutationRate) {
+                let u = Math.floor(Math.random() * width);
+                let v = Math.floor(Math.random() * width);
+
+                if (!(`${u}, ${v}` in genotype)) {
+                    genotype[`${u}, ${v}`] = [u, v];
+                    mutation.push([u, v]);
+                    console.log(`mutated from ${x}, ${y} to ${u}, ${v}`)
+                } else {
+                    mutation.push([x, y])
+                }
+            } else {
+                mutation.push([x, y])
             }
         }
-    )
+
+        mutated.push(mutation);
+    }
+
+    return mutated;
 }
 
 function reproduce(population, evaluate) {
@@ -85,10 +110,10 @@ function reproduce(population, evaluate) {
     return breed(select(population, population.length * numParents, evaluate), numParents);
 }
 
-export default function evolve(population, evaluate, numGenerations) {
+export default function evolve(population, evaluate, numGenerations, mutationRate) {
     for (let i = 0; i < numGenerations; i++) {
         console.log(`generation: ${i}`);
-        population = reproduce(population, evaluate);
+        population = mutate(reproduce(population, evaluate), mutationRate);
     }
     return population;
 }
