@@ -7,6 +7,20 @@ export default class Creature extends Phenotype {
     }
 }
 
+function evaluate(creatureCoordinates) {
+	let creature = generateCreatureFromCoordinates(creatureCoordinates);
+	let gol = new GameOfLife();
+	gol.addCreature(creature, 0, 0);
+
+	let maxCells = 0;
+	for (let i = 0; i < 200; i++) {
+		gol.update();
+		maxCells = Math.max(maxCells, gol.world.points.length);
+	}
+
+	return maxCells;
+}
+
 function crossover(parents) {
     const n = parents[0].length;
     let cells = [];
