@@ -24,21 +24,10 @@ function binarySearch(ary, value) {
     }
 }
 
-function select(population, numToSelect, evaluate) {
-    let selected = [];
-    let scores = [];
-
-    for (let member of population) {
-        scores.push(evaluate(member));
+export class Phenotype {
+    constructor(genotype) {
+        this.genotype = genotype;
     }
-
-    scores = [0].concat(normalise(cumulativeSum(scores)));
-
-    for (let i = 0; i < numToSelect; i++) {
-        selected.push(population[binarySearch(scores, Math.random())]);   
-    }
-
-    return selected;
 }
 
 function crossover(parents) {
@@ -62,14 +51,6 @@ function crossover(parents) {
     return child;
 }
 
-function breed(selection, numParents) {
-    let children = [];
-    for (let i = 0; i < selection.length; i += numParents) {
-        children.push(crossover(selection.slice(i, i + numParents)));
-    }
-    return children;
-}
-
 function mutate(population, mutationRate) {
     let mutated = []
     for (let child of population) {
@@ -78,7 +59,6 @@ function mutate(population, mutationRate) {
         let mutation = [];
 
         for (let [x, y] of child) {
-            genotype[`${x}, ${y}`] = [x, y];
             width = Math.max(width, x, y);
         }
 
@@ -105,6 +85,31 @@ function mutate(population, mutationRate) {
     return mutated;
 }
 
+function select(population, numToSelect, evaluate) {
+    let selected = [];
+    let scores = [];
+
+    for (let member of population) {
+        scores.push(evaluate(member));
+    }
+
+    scores = [0].concat(normalise(cumulativeSum(scores)));
+
+    for (let i = 0; i < numToSelect; i++) {
+        selected.push(population[binarySearch(scores, Math.random())]);   
+    }
+
+    return selected;
+}
+
+function breed(selection, numParents) {
+    let children = [];
+    for (let i = 0; i < selection.length; i += numParents) {
+        children.push(crossover(selection.slice(i, i + numParents)));
+    }
+    return children;
+}
+
 function reproduce(population, evaluate) {
     let numParents = 2;
     return breed(select(population, population.length * numParents, evaluate), numParents);
@@ -117,13 +122,3 @@ export default function evolve(population, evaluate, numGenerations, mutationRat
     }
     return population;
 }
-
-// let pop = [];
-
-// for (let i = 0; i < 1000; i++) {
-//     pop.push(Math.random());
-// }
-
-// for (let j = 0; j < 20; j++) {
-//     pop = reproduce(pop);
-// }
