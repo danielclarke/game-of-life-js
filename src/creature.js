@@ -23,7 +23,7 @@ class Genotype {
 
     getSequence() {
         let sequence = [];
-        for (let s of Object.values(sequence)) {
+        for (let s of Object.values(this.sequence)) {
             sequence.push(s.slice());
         }
         return sequence;
@@ -84,7 +84,6 @@ export function evaluate(creature) {
 		gol.update();
 		maxCells = Math.max(maxCells, gol.world.points.length);
 	}
-
 	return maxCells;
 }
 
@@ -95,7 +94,7 @@ export function crossover(parents) {
     let genotype = new Genotype();
 
     for (parent of parents) {
-        cells = cells.concat(parent.getSequence());
+        cells = cells.concat(parent.genotype.getSequence());
     }
 
     while (genotype.length < length) {
@@ -125,7 +124,7 @@ export function mutate(population, mutationRate) {
 
             // delete one entry from sequence at random and replace with a guaranteed novel entry
             sequence.splice(Math.floor(Math.random() * sequence.length), 1);
-            sequence.push(Math.floor(Math.random() * availableSpaces.length));
+            sequence.push(availableSpaces[Math.floor(Math.random() * availableSpaces.length)]);
 
             for (let s of sequence) {
                 genotype.extend(s);

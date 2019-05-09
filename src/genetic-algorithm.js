@@ -30,61 +30,6 @@ export class Phenotype {
     }
 }
 
-// function crossover(parents) {
-//     const n = parents[0].length;
-//     let cells = [];
-//     let genotype = {};
-//     let child = [];
-
-//     for (parent of parents) {
-//         cells = cells.concat(parent);
-//     }
-
-//     while (child.length < n) {
-//         let [x, y] = cells.splice(Math.floor(Math.random() * cells.length), 1)[0];
-//         if (!(`${x}, ${y}` in genotype)) {
-//             genotype[`${x}, ${y}`] = [x, y];
-//             child.push([x, y]);
-//         }
-//     }
-
-//     return child;
-// }
-
-// function mutate(population, mutationRate) {
-//     let mutated = []
-//     for (let child of population) {
-//         let genotype = {};
-//         let width = 0;
-//         let mutation = [];
-
-//         for (let [x, y] of child) {
-//             width = Math.max(width, x, y);
-//         }
-
-//         for (let [x, y] of child) {
-//             if (Math.random() <= mutationRate) {
-//                 let u = Math.floor(Math.random() * (width + 1));
-//                 let v = Math.floor(Math.random() * (width + 1));
-
-//                 if (!(`${u}, ${v}` in genotype)) {
-//                     genotype[`${u}, ${v}`] = [u, v];
-//                     mutation.push([u, v]);
-//                     console.log(`mutated from ${x}, ${y} to ${u}, ${v}`)
-//                 } else {
-//                     mutation.push([x, y])
-//                 }
-//             } else {
-//                 mutation.push([x, y])
-//             }
-//         }
-
-//         mutated.push(mutation);
-//     }
-
-//     return mutated;
-// }
-
 function select(population, numToSelect, evaluate) {
     let selected = [];
     let scores = [];
