@@ -32,6 +32,7 @@ export class Phenotype {
 
 function select(population, numToSelect, evaluate) {
     let selected = [];
+    //let scores = population.map(member => evaluate(member));
     let scores = [];
 
     for (let member of population) {
