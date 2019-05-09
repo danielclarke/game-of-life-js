@@ -30,60 +30,60 @@ export class Phenotype {
     }
 }
 
-function crossover(parents) {
-    const n = parents[0].length;
-    let cells = [];
-    let genotype = {};
-    let child = [];
+// function crossover(parents) {
+//     const n = parents[0].length;
+//     let cells = [];
+//     let genotype = {};
+//     let child = [];
 
-    for (parent of parents) {
-        cells = cells.concat(parent);
-    }
+//     for (parent of parents) {
+//         cells = cells.concat(parent);
+//     }
 
-    while (child.length < n) {
-        let [x, y] = cells.splice(Math.floor(Math.random() * cells.length), 1)[0];
-        if (!(`${x}, ${y}` in genotype)) {
-            genotype[`${x}, ${y}`] = [x, y];
-            child.push([x, y]);
-        }
-    }
+//     while (child.length < n) {
+//         let [x, y] = cells.splice(Math.floor(Math.random() * cells.length), 1)[0];
+//         if (!(`${x}, ${y}` in genotype)) {
+//             genotype[`${x}, ${y}`] = [x, y];
+//             child.push([x, y]);
+//         }
+//     }
 
-    return child;
-}
+//     return child;
+// }
 
-function mutate(population, mutationRate) {
-    let mutated = []
-    for (let child of population) {
-        let genotype = {};
-        let width = 0;
-        let mutation = [];
+// function mutate(population, mutationRate) {
+//     let mutated = []
+//     for (let child of population) {
+//         let genotype = {};
+//         let width = 0;
+//         let mutation = [];
 
-        for (let [x, y] of child) {
-            width = Math.max(width, x, y);
-        }
+//         for (let [x, y] of child) {
+//             width = Math.max(width, x, y);
+//         }
 
-        for (let [x, y] of child) {
-            if (Math.random() <= mutationRate) {
-                let u = Math.floor(Math.random() * (width + 1));
-                let v = Math.floor(Math.random() * (width + 1));
+//         for (let [x, y] of child) {
+//             if (Math.random() <= mutationRate) {
+//                 let u = Math.floor(Math.random() * (width + 1));
+//                 let v = Math.floor(Math.random() * (width + 1));
 
-                if (!(`${u}, ${v}` in genotype)) {
-                    genotype[`${u}, ${v}`] = [u, v];
-                    mutation.push([u, v]);
-                    console.log(`mutated from ${x}, ${y} to ${u}, ${v}`)
-                } else {
-                    mutation.push([x, y])
-                }
-            } else {
-                mutation.push([x, y])
-            }
-        }
+//                 if (!(`${u}, ${v}` in genotype)) {
+//                     genotype[`${u}, ${v}`] = [u, v];
+//                     mutation.push([u, v]);
+//                     console.log(`mutated from ${x}, ${y} to ${u}, ${v}`)
+//                 } else {
+//                     mutation.push([x, y])
+//                 }
+//             } else {
+//                 mutation.push([x, y])
+//             }
+//         }
 
-        mutated.push(mutation);
-    }
+//         mutated.push(mutation);
+//     }
 
-    return mutated;
-}
+//     return mutated;
+// }
 
 function select(population, numToSelect, evaluate) {
     let selected = [];
@@ -102,7 +102,7 @@ function select(population, numToSelect, evaluate) {
     return selected;
 }
 
-function breed(selection, numParents) {
+function breed(selection, numParents, crossover) {
     let children = [];
     for (let i = 0; i < selection.length; i += numParents) {
         children.push(crossover(selection.slice(i, i + numParents)));
@@ -110,15 +110,15 @@ function breed(selection, numParents) {
     return children;
 }
 
-function reproduce(population, evaluate) {
+function reproduce(population, evaluate, crossover) {
     let numParents = 2;
-    return breed(select(population, population.length * numParents, evaluate), numParents);
+    return breed(select(population, population.length * numParents, evaluate), numParents, crossover);
 }
 
-export default function evolve(population, evaluate, numGenerations, mutationRate) {
+export default function evolve(population, numGenerations, mutationRate, evaluate, crossover, mutate) {
     for (let i = 0; i < numGenerations; i++) {
         console.log(`generation: ${i}`);
-        population = mutate(reproduce(population, evaluate), mutationRate);
+        population = mutate(reproduce(population, evaluate, crossover), mutationRate);
     }
     return population;
 }

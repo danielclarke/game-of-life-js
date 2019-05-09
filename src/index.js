@@ -1,6 +1,7 @@
 import Point from "./point.js";
 import GameOfLife, {glider, shoe, line} from "./game-of-life.js"
 import evolve from "./genetic-algorithm.js"
+import {generateRandomCreature,	generateGolCreatureFromCreature, evaluate, crossover, mutate} from "./creature.js"
 
 var camera, scene, renderer;
 var geometry, material, mesh;
@@ -66,7 +67,7 @@ function animate() {
 
 	if (iPeriod === 0) {
 		gol = new GameOfLife();
-		let creature = generateCreatureFromCoordinates(population.splice(0, 1)[0]);
+		let creature = generateGolCreatureFromCreature(population.splice(0, 1)[0]);
 		gol.addCreature(creature, 0, 0)
 	}
 
@@ -107,60 +108,60 @@ function renderWorld(scene, world) {
 	)
 }
 
-function evaluate(creatureCoordinates) {
-	let creature = generateCreatureFromCoordinates(creatureCoordinates);
-	let gol = new GameOfLife();
-	gol.addCreature(creature, 0, 0);
+// function evaluate(creatureCoordinates) {
+// 	let creature = generateCreatureFromCoordinates(creatureCoordinates);
+// 	let gol = new GameOfLife();
+// 	gol.addCreature(creature, 0, 0);
 
-	let maxCells = 0;
-	for (let i = 0; i < 200; i++) {
-		gol.update();
-		maxCells = Math.max(maxCells, gol.world.points.length);
-	}
+// 	let maxCells = 0;
+// 	for (let i = 0; i < 200; i++) {
+// 		gol.update();
+// 		maxCells = Math.max(maxCells, gol.world.points.length);
+// 	}
 
-	return maxCells;
-}
+// 	return maxCells;
+// }
 
-function generateCreatureCoordinates(numCells, size) {
+// function generateCreatureCoordinates(numCells, size) {
 
-	let coordinates = [];
-	let creatureCoordinates = []
+// 	let coordinates = [];
+// 	let creatureCoordinates = []
 
-	for (let i = 0; i < size; i++) {
-		for (let j = 0; j < size; j++) {
-			coordinates.push([i, j]);
-		}
-	}
+// 	for (let i = 0; i < size; i++) {
+// 		for (let j = 0; j < size; j++) {
+// 			coordinates.push([i, j]);
+// 		}
+// 	}
 
-	for (let i = 0; i < numCells; i++) {
-		creatureCoordinates.push(coordinates.splice(Math.floor(Math.random() * coordinates.length), 1)[0]);
-	}
+// 	for (let i = 0; i < numCells; i++) {
+// 		creatureCoordinates.push(coordinates.splice(Math.floor(Math.random() * coordinates.length), 1)[0]);
+// 	}
 
-	return creatureCoordinates;
-}
+// 	return creatureCoordinates;
+// }
 
-function generateCreatureFromCoordinates(creatureCoordinates) {
-	let size = 0;
-	let creature = [];
+// function generateCreatureFromCoordinates(creatureCoordinates) {
+// 	let size = 0;
+// 	let creature = [];
 
-	for (let [x, y] of creatureCoordinates) {
-		size = Math.max(size, x, y);
-	}
+// 	for (let [x, y] of creatureCoordinates) {
+// 		size = Math.max(size, x, y);
+// 	}
 
-	for (let i = 0; i < size + 1; i++) {
-		creature.push([]);
-		for (let j = 0; j < size + 1; j++) {
-			creature[i].push(0);
-		}
-	}
+// 	for (let i = 0; i < size + 1; i++) {
+// 		creature.push([]);
+// 		for (let j = 0; j < size + 1; j++) {
+// 			creature[i].push(0);
+// 		}
+// 	}
 
-	for (let [x, y] of creatureCoordinates) {
-		creature[x][y] = 1;
-	}
+// 	for (let [x, y] of creatureCoordinates) {
+// 		creature[x][y] = 1;
+// 	}
 
-	return creature;
+// 	return creature;
 
-}
+// }
 
 function evolveCreature(numCells, size, numIterations, populationSize) {
 	let population = [];
@@ -168,10 +169,10 @@ function evolveCreature(numCells, size, numIterations, populationSize) {
 	let score = 0;
 
 	for (let i = 0; i < populationSize; i++) {
-		population.push(generateCreatureCoordinates(numCells, size));
+		population.push(generateRandomCreature(numCells, size));
 	}
 
-	population = evolve(population, evaluate, numIterations, 0.01);
+	population = evolve(population, numIterations, 0.01, evaluate, crossover, mutate);
 
 	return population;
 
