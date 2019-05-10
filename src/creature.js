@@ -39,9 +39,15 @@ class Creature {
 
     generateSignature() {
         let s = [0];
-        for (let [x, y] of this.genotype.getSequence()) {
-            s[0] += Math.pow(2, x + y * this.width);
+        let sequence = this.genotype.getSequence();
+
+        let xMin = Math.min(...sequence.map(s => s[0]));
+        let yMin = Math.min(...sequence.map(s => s[1]));
+
+        for (let [x, y] of sequence) {
+            s[0] += Math.pow(2, (x- xMin) + (y - yMin) * this.width);
         }
+        
         this.signature = s.join();
     }
 }
