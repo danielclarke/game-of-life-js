@@ -24,19 +24,13 @@ function binarySearch(scores, value) {
     }
 }
 
-export class Phenotype {
-    constructor(genotype) {
-        this.genotype = genotype;
-    }
-}
-
 function selector(evaluate) {
     return (numToSelect) => (population) => {
         let selected = [];
         let scores = normalise(cumulativeSum(population.map(member => evaluate(member))));
         scores = [0].concat(scores);
     
-        for (let i = 0; i < numToSelect; i++) {
+        for (let i = 0; i < numToSelect * population.length; i++) {
             selected.push(population[binarySearch(scores, Math.random())]);   
         }
     
@@ -45,10 +39,10 @@ function selector(evaluate) {
 }
 
 function breeder(crossover) {
-    return (numParents) => (population) => {
+    return (numParents) => (parents) => {
         let children = [];
-        for (let i = 0; i < population.length; i += numParents) {
-            children.push(crossover(population.slice(i, i + numParents)));
+        for (let i = 0; i < parents.length; i += numParents) {
+            children.push(crossover(parents.slice(i, i + numParents)));
         }
         return children;
     }
@@ -70,15 +64,19 @@ function mutator(mutate) {
 }
 
 export default function evolver(evaluate, crossover, mutate) {
-    const mutateAll = mutator(mutate)(mutationRate);
-    const breed = breeder(crossover)(numParents);
-    const select = selector(evaluate)(population.length * numParents);
 
-    return (population, numGenerations, mutationRate, numParents) => {
-        for (let i = 0; i < numGenerations; i++) {
-            console.log(`generation: ${i}`);
-            population = mutateAll(breed(select(population)));
+    return (numGenerations, mutationRate, numParents) => {
+
+        const mutateAll = mutator(mutate)(mutationRate);
+        const breed = breeder(crossover)(numParents);
+        const select = selector(evaluate)(numParents);
+
+        return (population) => {
+            for (let i = 0; i < numGenerations; i++) {
+                console.log(`generation: ${i}`);
+                population = mutateAll(breed(select(population)));
+            }
+            return population;
         }
-        return population;
     }
 }

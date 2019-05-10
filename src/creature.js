@@ -1,6 +1,4 @@
-import {Phenotype} from "./genetic-algorithm.js"
 import GameOfLife from "./game-of-life.js"
-
 
 class Genotype {
     constructor() {
@@ -30,10 +28,10 @@ class Genotype {
     }
 }
 
-class Creature extends Phenotype {
+class Creature {
     constructor(width, genotype) {
-        super(genotype);
         this.width = width;
+        this.genotype = genotype;
     }
 }
 
@@ -105,13 +103,13 @@ export function crossover(parents) {
 }
 
 export function mutate(creature) {
-    let sequence = child.genotype.getSequence();
-    let width = child.width;
+    let sequence = creature.genotype.getSequence();
+    let width = creature.width;
     let genotype = new Genotype();
 
     let u = Math.floor(Math.random() * width);
     let v = Math.floor(Math.random() * width);
-    while (child.genotype.contains([u, v])) {
+    while (creature.genotype.contains([u, v])) {
         u = Math.floor(Math.random() * width);
         v = Math.floor(Math.random() * width);
     }

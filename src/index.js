@@ -9,8 +9,13 @@ var geometry, material, mesh;
 let population = [];
 
 let cubes = [];
-let period = 200;
+const numCells = 10;
+const creatureWidth = 5;
+const numGenerations = 100;
+const populationSize = 100;
+const period = 200;
 let iPeriod = 0;
+let iCreature = 0;
 
 let gol = new GameOfLife();
 // const generation_d = document.querySelector('.generation');
@@ -28,32 +33,7 @@ function init() {
 
 	scene = new THREE.Scene();
 
-	// let creatureCoordinates = evolveCreature(5, 3, 5, 20);
-	// let creature = generateCreatureFromCoordinates(creatureCoordinates);
-	// console.log(creature);
-	// gol.addCreature(creature, 0, 0);
-
-	population = evolveCreature(5, 3, 10, 100);
-
-	// population.forEach(
-	// 	(creatureCoordinates, index) => {
-	// 		let creature = generateCreatureFromCoordinates(creatureCoordinates);
-	// 		console.log(creature);
-	// 		gol.addCreature(creature, 0, index * 4);
-	// 	}
-	// )
-
-	// let n = 10;
-	// let m = 10;
-
-	// for(let i = 0; i < n; i++) {
-	// 	for(let j = 0; j < m; j++) {
-	// 		// let x = Math.floor(Math.random() * n - n / 2) + 1;
-	// 		// let y = Math.floor(Math.random() * n - n / 2) + 1;
-			// gol.addCreature(line(), i * 20 - 100, j * 20 - 100);
-	// 		// gol.world.insert(new Point(i - n / 2, j * 10 - (m * 10) / 2));
-	// 	}
-	// }
+	population = evolveCreature(numCells, creatureWidth, numGenerations, populationSize);
 
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setSize( window.innerWidth, window.innerHeight );
@@ -62,12 +42,15 @@ function init() {
 }
 
 function animate() {
-
 	requestAnimationFrame( animate );
 
 	if (iPeriod === 0) {
 		gol = new GameOfLife();
-		let creature = generateGolCreatureFromCreature(population.splice(0, 1)[0]);
+		let creature = generateGolCreatureFromCreature(population[iCreature]);
+		iCreature += 1;
+		if (iCreature === populationSize) {
+			iCreature = 0;
+		}
 		gol.addCreature(creature, 0, 0)
 	}
 
@@ -81,13 +64,6 @@ function animate() {
 	gol.update();
 
 	renderer.render( scene, camera );
-
-	// requestAnimationFrame( animate );
-
-	// renderWorld(scene, gol.world);
-	// // gol.update();
-
-	// renderer.render( scene, camera );
 }
 
 function renderWorld(scene, world) {
@@ -108,73 +84,18 @@ function renderWorld(scene, world) {
 	)
 }
 
-// function evaluate(creatureCoordinates) {
-// 	let creature = generateCreatureFromCoordinates(creatureCoordinates);
-// 	let gol = new GameOfLife();
-// 	gol.addCreature(creature, 0, 0);
-
-// 	let maxCells = 0;
-// 	for (let i = 0; i < 200; i++) {
-// 		gol.update();
-// 		maxCells = Math.max(maxCells, gol.world.points.length);
-// 	}
-
-// 	return maxCells;
-// }
-
-// function generateCreatureCoordinates(numCells, size) {
-
-// 	let coordinates = [];
-// 	let creatureCoordinates = []
-
-// 	for (let i = 0; i < size; i++) {
-// 		for (let j = 0; j < size; j++) {
-// 			coordinates.push([i, j]);
-// 		}
-// 	}
-
-// 	for (let i = 0; i < numCells; i++) {
-// 		creatureCoordinates.push(coordinates.splice(Math.floor(Math.random() * coordinates.length), 1)[0]);
-// 	}
-
-// 	return creatureCoordinates;
-// }
-
-// function generateCreatureFromCoordinates(creatureCoordinates) {
-// 	let size = 0;
-// 	let creature = [];
-
-// 	for (let [x, y] of creatureCoordinates) {
-// 		size = Math.max(size, x, y);
-// 	}
-
-// 	for (let i = 0; i < size + 1; i++) {
-// 		creature.push([]);
-// 		for (let j = 0; j < size + 1; j++) {
-// 			creature[i].push(0);
-// 		}
-// 	}
-
-// 	for (let [x, y] of creatureCoordinates) {
-// 		creature[x][y] = 1;
-// 	}
-
-// 	return creature;
-
-// }
-
-function evolveCreature(numCells, size, numIterations, populationSize) {
+function evolveCreature(numCells, size, numGenerations, populationSize) {
 	let population = [];
 	let fittest;
 	let score = 0;
 
-	const evolve = evolver(evaluate, crossover, mutate);
+	const evolve = evolver(evaluate, crossover, mutate)(numGenerations, 0.01, 2);
 
 	for (let i = 0; i < populationSize; i++) {
 		population.push(generateRandomCreature(numCells, size));
 	}
 
-	population = evolve(population, numIterations, 0.01, 2);
+	population = evolve(population);
 
 	return population;
 
