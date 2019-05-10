@@ -47,7 +47,7 @@ class Creature {
         for (let [x, y] of sequence) {
             s[0] += Math.pow(2, (x- xMin) + (y - yMin) * this.width);
         }
-        
+
         this.signature = s.join();
     }
 }
@@ -95,10 +95,12 @@ export function evaluate(creature) {
 	gol.addCreature(golCreature, 0, 0);
 
 	let maxCells = 0;
-	for (let i = 0; i < 200; i++) {
-		gol.update();
-		maxCells = Math.max(maxCells, gol.world.points.length);
-	}
+	for (let i = 0; i < 400; i++) {
+        gol.update();
+        if (i > 300) {
+            maxCells = Math.max(maxCells, gol.world.points.length);
+        }
+    }
 	return maxCells;
 }
 

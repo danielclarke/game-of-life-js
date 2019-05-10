@@ -11,9 +11,9 @@ let population = [];
 let cubes = [];
 const numCells = 10;
 const creatureWidth = 5;
-const numGenerations = 200;
+const numGenerations = 50;
 const populationSize = 200;
-const period = 200;
+const period = 400;
 let iPeriod = 0;
 let iCreature = 0;
 
