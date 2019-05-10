@@ -104,36 +104,25 @@ export function crossover(parents) {
     return new Creature(width, genotype);
 }
 
-export function mutate(population, mutationRate) {
-    let mutated = []
+export function mutate(creature) {
+    let sequence = child.genotype.getSequence();
+    let width = child.width;
+    let genotype = new Genotype();
 
-    for (let child of population) {
-        if (Math.random() <= mutationRate) {
-            let sequence = child.genotype.getSequence();
-            let width = child.width;
-            let genotype = new Genotype();
-            let availableSpaces = [];
-
-            for (let i = 0; i < width; i++) {
-                for (let j = 0; j < width; j++) {
-                    if(!(child.genotype.contains([i, j]))) {
-                        availableSpaces.push([i, j]);
-                    }
-                }
-            }
-
-            // delete one entry from sequence at random and replace with a guaranteed novel entry
-            sequence.splice(Math.floor(Math.random() * sequence.length), 1);
-            sequence.push(availableSpaces[Math.floor(Math.random() * availableSpaces.length)]);
-
-            for (let s of sequence) {
-                genotype.extend(s);
-            }
-
-            mutated.push(new Creature(width, genotype));
-        } else {
-            mutated.push(child);
-        }
+    let u = Math.floor(Math.random() * width);
+    let v = Math.floor(Math.random() * width);
+    while (child.genotype.contains([u, v])) {
+        u = Math.floor(Math.random() * width);
+        v = Math.floor(Math.random() * width);
     }
-    return mutated;
+
+    // delete one entry from sequence at random and replace with a guaranteed novel entry
+    sequence.splice(Math.floor(Math.random() * sequence.length), 1);
+    sequence.push([u, v]);
+
+    for (let s of sequence) {
+        genotype.extend(s);
+    }
+
+    return new Creature(width, genotype);
 }

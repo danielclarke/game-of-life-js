@@ -1,6 +1,6 @@
 import Point from "./point.js";
 import GameOfLife, {glider, shoe, line} from "./game-of-life.js"
-import evolve from "./genetic-algorithm.js"
+import evolver from "./genetic-algorithm.js"
 import {generateRandomCreature,	generateGolCreatureFromCreature, evaluate, crossover, mutate} from "./creature.js"
 
 var camera, scene, renderer;
@@ -168,11 +168,13 @@ function evolveCreature(numCells, size, numIterations, populationSize) {
 	let fittest;
 	let score = 0;
 
+	const evolve = evolver(evaluate, crossover, mutate);
+
 	for (let i = 0; i < populationSize; i++) {
 		population.push(generateRandomCreature(numCells, size));
 	}
 
-	population = evolve(population, numIterations, 0.01, evaluate, crossover, mutate);
+	population = evolve(population, numIterations, 0.01, 2);
 
 	return population;
 
