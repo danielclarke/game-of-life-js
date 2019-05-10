@@ -32,6 +32,17 @@ class Creature {
     constructor(width, genotype) {
         this.width = width;
         this.genotype = genotype;
+        this.signature = "";
+        this.generateSignature();
+
+    }
+
+    generateSignature() {
+        let s = [0];
+        for (let [x, y] of this.genotype.getSequence()) {
+            s[0] += Math.pow(2, x + y * this.width);
+        }
+        this.signature = s.join();
     }
 }
 

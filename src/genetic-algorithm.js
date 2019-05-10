@@ -24,17 +24,37 @@ function binarySearch(scores, value) {
     }
 }
 
-function selector(evaluate) {
-    return (numToSelect) => (population) => {
-        let selected = [];
-        let scores = normalise(cumulativeSum(population.map(member => evaluate(member))));
-        scores = [0].concat(scores);
-    
-        for (let i = 0; i < numToSelect * population.length; i++) {
-            selected.push(population[binarySearch(scores, Math.random())]);   
+function scorer(evaluate) {
+    return (scoreCache) => (population) => {
+        let scores = [];
+
+        for (let member of population) {
+            if (member.signature in scoreCache) {
+                scores.push(scoreCache[member.signature]);
+            } else {
+                scores.push(evaluate(member));
+                scoreCache[member.signature] = scores[scores.length - 1];
+            }
         }
-    
-        return selected;
+        return scores;
+    }
+}
+
+function selector(evaluate) {
+    return (scoreCache) => {
+        const score = scorer(evaluate)(scoreCache);
+
+        return (numToSelect) => (population) => {
+            let selected = [];
+            let scores = normalise(cumulativeSum(score(population)));
+            scores = [0].concat(scores);
+        
+            for (let i = 0; i < numToSelect * population.length; i++) {
+                selected.push(population[binarySearch(scores, Math.random())]);   
+            }
+        
+            return selected;
+        }
     }
 }
 
@@ -67,14 +87,24 @@ export default function evolver(evaluate, crossover, mutate) {
 
     return (numGenerations, mutationRate, numParents) => {
 
+        let scoreCache = {};
+
         const mutateAll = mutator(mutate)(mutationRate);
         const breed = breeder(crossover)(numParents);
-        const select = selector(evaluate)(numParents);
+        const select = selector(evaluate)(scoreCache)(numParents);
 
         return (population) => {
             for (let i = 0; i < numGenerations; i++) {
                 console.log(`generation: ${i}`);
                 population = mutateAll(breed(select(population)));
+            }
+            // call select one more time to score the last population
+            select(population);
+            population.sort(
+                (creatureA, creatureB) => {return scoreCache[creatureB.signature] - scoreCache[creatureA.signature]}
+            );
+            for (let p of population) {
+                console.log(`${p.signature} ${scoreCache[p.signature]}`);
             }
             return population;
         }
