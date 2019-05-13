@@ -8,7 +8,6 @@ function normalise(scores) {
 }
 
 function binarySearch(scores, value) {
-
     if (scores.length == 1) {
         return 0;
     }
@@ -40,23 +39,20 @@ function scorer(evaluate) {
     }
 }
 
-function selector(evaluate) {
-    return (scoreCache) => {
-        const score = scorer(evaluate)(scoreCache);
-
-        return (numToSelect) => (population) => {
-            let selected = [];
-            let scores = normalise(cumulativeSum(score(population)));
-            scores = [0].concat(scores);
-        
-            for (let i = 0; i < numToSelect * population.length; i++) {
-                selected.push(population[binarySearch(scores, Math.random())]);   
-            }
-        
-            return selected;
+function selector(score) {
+    return (numToSelect) => (population) => {
+        let selected = [];
+        let scores = normalise(cumulativeSum(score(population)));
+        scores = [0].concat(scores);
+    
+        for (let i = 0; i < numToSelect * population.length; i++) {
+            selected.push(population[binarySearch(scores, Math.random())]);   
         }
+    
+        return selected;
     }
 }
+
 
 function breeder(crossover) {
     return (numParents) => (parents) => {
@@ -91,15 +87,16 @@ export default function evolver(evaluate, crossover, mutate) {
 
         const mutateAll = mutator(mutate)(mutationRate);
         const breed = breeder(crossover)(numParents);
-        const select = selector(evaluate)(scoreCache)(numParents);
+        const score = scorer(evaluate)(scoreCache);
+        const select = selector(score)(numParents);
 
         return (population) => {
             for (let i = 0; i < numGenerations; i++) {
                 console.log(`generation: ${i}`);
                 population = mutateAll(breed(select(population)));
             }
-            // call select one more time to score the last population
-            select(population);
+            // call score one more time to score the last population
+            score(population);
             population.sort(
                 (creatureA, creatureB) => {return scoreCache[creatureB.signature] - scoreCache[creatureA.signature]}
             );
