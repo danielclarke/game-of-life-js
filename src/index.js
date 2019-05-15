@@ -1,7 +1,7 @@
 import Point from "./point.js";
 import GameOfLife, {glider, shoe, line} from "./game-of-life.js"
 import evolver from "./genetic-algorithm.js"
-import {generateRandomCreature,	generateGolCreatureFromCreature, evaluate, crossover, mutate} from "./creature.js"
+import {generateRandomCreature,	generateGolCreatureFromCreature, generateGolCreatureFromSequence, evaluate, crossover, mutate} from "./creature.js"
 
 var camera, scene, renderer;
 var geometry, material, mesh;
@@ -11,9 +11,9 @@ let population = [];
 let cubes = [];
 const numCells = 10;
 const creatureWidth = 5;
-const numGenerations = 50;
-const populationSize = 200;
-const period = 400;
+const numGenerations = 10;
+const populationSize = 20;
+const period = 1200;
 let iPeriod = 0;
 let iCreature = 0;
 
@@ -33,7 +33,19 @@ function init() {
 
 	scene = new THREE.Scene();
 
-	population = evolveCreature(numCells, creatureWidth, numGenerations, populationSize);
+	// population = evolveCreature(numCells, creatureWidth, numGenerations, populationSize);
+
+	for (let i = 0; i < 10; i++) {
+		let creature = [];
+		let width = Math.floor(Math.random() * 50) * 2;
+		for (let j = 0; j < width; j++) {
+			creature.push([j, i * 2])
+		}
+		gol.addCreature(generateGolCreatureFromSequence(creature), - width / 2, 0);
+	}
+	// gol.addCreature(generateGolCreatureFromSequence([[0, 0], [0, 1], [1, 0], [1, 1]]), 0, 0);
+
+	// gol.addCreature(generateGolCreatureFromCreature(generateRandomCreature(100, 40)), 0, 0);
 
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setSize( window.innerWidth, window.innerHeight );
@@ -44,21 +56,21 @@ function init() {
 function animate() {
 	requestAnimationFrame( animate );
 
-	if (iPeriod === 0) {
-		gol = new GameOfLife();
-		let creature = generateGolCreatureFromCreature(population[iCreature]);
-		iCreature += 1;
-		if (iCreature === populationSize) {
-			iCreature = 0;
-		}
-		gol.addCreature(creature, 0, 0)
-	}
+	// if (iPeriod === 0) {
+	// 	gol = new GameOfLife();
+	// 	let creature = generateGolCreatureFromCreature(population[iCreature]);
+	// 	iCreature += 1;
+	// 	if (iCreature === populationSize) {
+	// 		iCreature = 0;
+	// 	}
+	// 	gol.addCreature(creature, 0, 0)
+	// }
 
-	iPeriod += 1;
+	// iPeriod += 1;
 	
-	if (iPeriod === period) {
-		iPeriod = 0;
-	}
+	// if (iPeriod === period) {
+	// 	iPeriod = 0;
+	// }
 
 	renderWorld(scene, gol.world);
 	gol.update();
