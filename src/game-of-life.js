@@ -16,87 +16,11 @@ export default class GameOfLife {
         let updatedWorld = new QuadTree(1, aabb);
     
         let cells = {};
-        
-        // this.world.query(this.world.boundary).forEach(
-        // this.world.points.forEach(
-        //     (cell, index) => {
-        //         if (!(cell.x in cells)) {
-        //             cells[cell.x] = {};
-        //         }
-        //         cells[cell.x][cell.y] = 1;
-    
-        //         if (!(cell.x - 1 in cells)) {
-        //             cells[cell.x - 1] = {};
-        //         }
-        //         if (!(cell.x + 1 in cells)) {
-        //             cells[cell.x + 1] = {};
-        //         }
-    
-        //         if (!(cell.y - 1 in cells[cell.x - 1])) {
-        //             cells[cell.x - 1][cell.y - 1] = 0;
-        //         }
-        //         if (!(cell.y - 1 in cells[cell.x])) {
-        //             cells[cell.x][cell.y - 1] = 0;
-        //         }
-        //         if (!(cell.y - 1 in cells[cell.x + 1])) {
-        //             cells[cell.x + 1][cell.y - 1] = 0;
-        //         }
-        //         if (!(cell.y in cells[cell.x - 1])) {
-        //             cells[cell.x - 1][cell.y] = 0;
-        //         }
-        //         if (!(cell.y in cells[cell.x])) {
-        //             cells[cell.x][cell.y] = 0;
-        //         }
-        //         if (!(cell.y in cells[cell.x + 1])) {
-        //             cells[cell.x + 1][cell.y] = 0;
-        //         }
-        //         if (!(cell.y + 1 in cells[cell.x - 1])) {
-        //             cells[cell.x - 1][cell.y + 1] = 0;
-        //         }
-        //         if (!(cell.y + 1 in cells[cell.x])) {
-        //             cells[cell.x][cell.y + 1] = 0;
-        //         }
-        //         if (!(cell.y + 1 in cells[cell.x + 1])) {
-        //             cells[cell.x + 1][cell.y + 1] = 0;
-        //         }
-        //     }
-        // )
-        
-        // Object.keys(cells).forEach(
-        //     (x, index) => {
-        //         Object.keys(cells[x]).forEach(
-        //             (y, index) => {
-        //                 let cell = new Point(parseInt(x), parseInt(y));
-        //                 let population = this.world.query(new AABB(cell, 1.5)).length - cells[x][y];
-        //                 if ((cells[x][y] === 1 && population === 2) || population === 3) {
-        //                     updatedWorld.insert(cell);
-        //                 }
-        //             }
-        //         )
-        //     }
-        // )
-    
-        // this.world = updatedWorld;
 
         this.world.points.forEach(
             (cell, index) => {
 
-                // if (!(cell.x in cells)) {
-                //     cells[cell.x] = {};
-                // }
-                // if (!(cell.x - 1 in cells)) {
-                //     cells[cell.x - 1] = {};
-                // }
-                // if (!(cell.x + 1 in cells)) {
-                // }
-    
-                // if (!(cell.y in cells[cell.x])) {
-                //     cells[cell.x][cell.y] = {"population": 0, "value": 1};
-                // } else {
-                //     cells[cell.x][cell.y]["value"] = 1;
-                // }
-
-                let bound = 50;
+                let bound = 80;
                 
                 for (let i of [-1, 0, 1]) {                            
                     let x = cell.x + i;
@@ -132,47 +56,6 @@ export default class GameOfLife {
                         }
                     }
                 }
-                
-                // if (!(cell.y - 1 in cells[cell.x - 1])) {
-                //     cells[cell.x - 1][cell.y - 1] = {"population": 1, "value": 0};
-                // } else {
-                //     cells[cell.x - 1][cell.y - 1]["population"] += 1;
-                // }
-                // if (!(cell.y - 1 in cells[cell.x])) {
-                //     cells[cell.x][cell.y - 1] = {"population": 1, "value": 0};
-                // } else {
-                //     cells[cell.x][cell.y - 1]["population"] += 1;
-                // }
-                // if (!(cell.y - 1 in cells[cell.x + 1])) {
-                //     cells[cell.x + 1][cell.y - 1] = {"population": 1, "value": 0};
-                // } else {
-                //     cells[cell.x + 1][cell.y - 1]["population"] += 1;
-                // }
-                // if (!(cell.y in cells[cell.x - 1])) {
-                //     cells[cell.x - 1][cell.y] = {"population": 1, "value": 0};
-                // } else {
-                //     cells[cell.x - 1][cell.y]["population"] += 1;
-                // }
-                // if (!(cell.y in cells[cell.x + 1])) {
-                //     cells[cell.x + 1][cell.y] = {"population": 1, "value": 0};
-                // } else {
-                //     cells[cell.x + 1][cell.y]["population"] += 1;
-                // }
-                // if (!(cell.y + 1 in cells[cell.x - 1])) {
-                //     cells[cell.x - 1][cell.y + 1] = {"population": 1, "value": 0};
-                // } else {
-                //     cells[cell.x - 1][cell.y + 1]["population"] += 1;
-                // }
-                // if (!(cell.y + 1 in cells[cell.x])) {
-                //     cells[cell.x][cell.y + 1] = {"population": 1, "value": 0};
-                // } else {
-                //     cells[cell.x][cell.y + 1]["population"] += 1;
-                // }
-                // if (!(cell.y + 1 in cells[cell.x + 1])) {
-                //     cells[cell.x + 1][cell.y + 1] = {"population": 1, "value": 0};
-                // } else {
-                //     cells[cell.x + 1][cell.y + 1]["population"] += 1;
-                // }
             }
         )
 
@@ -202,21 +85,6 @@ export default class GameOfLife {
         }
     }
 }
-
-// world.insert(new Point(0, 1));
-// world.insert(new Point(2, -1));
-// world.insert(new Point(1, 2));
-// world.insert(new Point(2, -1));
-// world.insert(new Point(1, 0));
-// world.insert(new Point(1, 1));
-// world.insert(new Point(-1, 0));
-
-// x: -1, y: 2
-// x: 0, y: 2
-// x: 1, y: 1
-// x: 0, y: 1
-// x: 2, y: 1
-// x: 1, y: -1
 
 export function glider() {
     return [[1, 0, 1], [0, 1, 1], [0, 1, 0]];

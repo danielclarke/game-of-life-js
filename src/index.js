@@ -9,10 +9,10 @@ var geometry, material, mesh;
 let population = [];
 
 let cubes = [];
-const numCells = 10;
-const creatureWidth = 5;
-const numGenerations = 10;
-const populationSize = 20;
+const numCells = 6;
+const creatureWidth = 3;
+const numGenerations = 50;
+const populationSize = 100;
 const period = 1200;
 let iPeriod = 0;
 let iCreature = 0;
@@ -33,18 +33,9 @@ function init() {
 
 	scene = new THREE.Scene();
 
-	// population = evolveCreature(numCells, creatureWidth, numGenerations, populationSize);
+	population = evolveCreature(numCells, creatureWidth, numGenerations, populationSize);
+	gol.addCreature(generateGolCreatureFromCreature(population[0]), 0, 0);
 
-	for (let i = 0; i < 10; i++) {
-		let creature = [];
-		let width = Math.floor(Math.random() * 20) * 2;
-		for (let j = 0; j < width; j++) {
-			creature.push([j, i * 2])
-		}
-		// gol.addCreature(glider(), width, 0);
-
-		gol.addCreature(generateGolCreatureFromSequence(creature), - width / 2, 0);
-	}
 	// gol.addCreature(generateGolCreatureFromSequence([[0, 0], [0, 1], [1, 0], [1, 1]]), 0, 0);
 
 	// gol.addCreature(generateGolCreatureFromCreature(generateRandomCreature(100, 40)), 0, 0);
