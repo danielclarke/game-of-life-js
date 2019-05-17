@@ -89,6 +89,25 @@ export function generateGolCreatureFromCreature(creature) {
 	return golCreature;
 }
 
+export function generateGolCreatureFromSequence(sequence) {
+
+    let golCreature = [];    
+    let width = Math.max(...sequence.map(s => s[0])) + 1;
+
+	for (let i = 0; i < width; i++) {
+		golCreature.push([]);
+		for (let j = 0; j < width; j++) {
+			golCreature[i].push(0);
+		}
+	}
+
+	for (let [x, y] of sequence) {
+		golCreature[x][y] = 1;
+	}
+
+	return golCreature;
+}
+
 export function evaluate(creature) {
 	let golCreature = generateGolCreatureFromCreature(creature);
 	let gol = new GameOfLife();
