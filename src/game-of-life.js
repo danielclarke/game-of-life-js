@@ -81,62 +81,98 @@ export default class GameOfLife {
         this.world.points.forEach(
             (cell, index) => {
 
-                if (!(cell.x in cells)) {
-                    cells[cell.x] = {};
-                }
-                if (!(cell.x - 1 in cells)) {
-                    cells[cell.x - 1] = {};
-                }
-                if (!(cell.x + 1 in cells)) {
-                    cells[cell.x + 1] = {};
-                }
+                // if (!(cell.x in cells)) {
+                //     cells[cell.x] = {};
+                // }
+                // if (!(cell.x - 1 in cells)) {
+                //     cells[cell.x - 1] = {};
+                // }
+                // if (!(cell.x + 1 in cells)) {
+                // }
     
-                if (!(cell.y in cells[cell.x])) {
-                    cells[cell.x][cell.y] = {"population": 0, "value": 1};
-                } else {
-                    cells[cell.x][cell.y]["value"] = 1;
+                // if (!(cell.y in cells[cell.x])) {
+                //     cells[cell.x][cell.y] = {"population": 0, "value": 1};
+                // } else {
+                //     cells[cell.x][cell.y]["value"] = 1;
+                // }
+
+                let bound = 50;
+                
+                for (let i of [-1, 0, 1]) {                            
+                    let x = cell.x + i;
+                    if (x > bound) {
+                        x = -bound;
+                    }
+                    if (x < -bound) {
+                        x = bound;
+                    }
+                    if (!(x in cells)) {
+                        cells[x] = {};
+                    }
+                    for (let j of [-1, 0, 1]) {
+                        let y = cell.y + j;
+                        if (y > bound) {
+                            y = -bound;
+                        }
+                        if (y < -bound) {
+                            y = bound;
+                        }
+                        if (i === 0 && j === 0) {
+                            if (!(cell.y in cells[cell.x])) {
+                                cells[cell.x][cell.y] = {"population": 0, "value": 1};
+                            } else {
+                                cells[cell.x][cell.y]["value"] = 1;
+                            }
+                        } else {
+                            if (!(y in cells[x])) {
+                                cells[x][y] = {"population": 1, "value": 0};
+                            } else {
+                                cells[x][y]["population"] += 1;
+                            }
+                        }
+                    }
                 }
                 
-                if (!(cell.y - 1 in cells[cell.x - 1])) {
-                    cells[cell.x - 1][cell.y - 1] = {"population": 1, "value": 0};
-                } else {
-                    cells[cell.x - 1][cell.y - 1]["population"] += 1;
-                }
-                if (!(cell.y - 1 in cells[cell.x])) {
-                    cells[cell.x][cell.y - 1] = {"population": 1, "value": 0};
-                } else {
-                    cells[cell.x][cell.y - 1]["population"] += 1;
-                }
-                if (!(cell.y - 1 in cells[cell.x + 1])) {
-                    cells[cell.x + 1][cell.y - 1] = {"population": 1, "value": 0};
-                } else {
-                    cells[cell.x + 1][cell.y - 1]["population"] += 1;
-                }
-                if (!(cell.y in cells[cell.x - 1])) {
-                    cells[cell.x - 1][cell.y] = {"population": 1, "value": 0};
-                } else {
-                    cells[cell.x - 1][cell.y]["population"] += 1;
-                }
-                if (!(cell.y in cells[cell.x + 1])) {
-                    cells[cell.x + 1][cell.y] = {"population": 1, "value": 0};
-                } else {
-                    cells[cell.x + 1][cell.y]["population"] += 1;
-                }
-                if (!(cell.y + 1 in cells[cell.x - 1])) {
-                    cells[cell.x - 1][cell.y + 1] = {"population": 1, "value": 0};
-                } else {
-                    cells[cell.x - 1][cell.y + 1]["population"] += 1;
-                }
-                if (!(cell.y + 1 in cells[cell.x])) {
-                    cells[cell.x][cell.y + 1] = {"population": 1, "value": 0};
-                } else {
-                    cells[cell.x][cell.y + 1]["population"] += 1;
-                }
-                if (!(cell.y + 1 in cells[cell.x + 1])) {
-                    cells[cell.x + 1][cell.y + 1] = {"population": 1, "value": 0};
-                } else {
-                    cells[cell.x + 1][cell.y + 1]["population"] += 1;
-                }
+                // if (!(cell.y - 1 in cells[cell.x - 1])) {
+                //     cells[cell.x - 1][cell.y - 1] = {"population": 1, "value": 0};
+                // } else {
+                //     cells[cell.x - 1][cell.y - 1]["population"] += 1;
+                // }
+                // if (!(cell.y - 1 in cells[cell.x])) {
+                //     cells[cell.x][cell.y - 1] = {"population": 1, "value": 0};
+                // } else {
+                //     cells[cell.x][cell.y - 1]["population"] += 1;
+                // }
+                // if (!(cell.y - 1 in cells[cell.x + 1])) {
+                //     cells[cell.x + 1][cell.y - 1] = {"population": 1, "value": 0};
+                // } else {
+                //     cells[cell.x + 1][cell.y - 1]["population"] += 1;
+                // }
+                // if (!(cell.y in cells[cell.x - 1])) {
+                //     cells[cell.x - 1][cell.y] = {"population": 1, "value": 0};
+                // } else {
+                //     cells[cell.x - 1][cell.y]["population"] += 1;
+                // }
+                // if (!(cell.y in cells[cell.x + 1])) {
+                //     cells[cell.x + 1][cell.y] = {"population": 1, "value": 0};
+                // } else {
+                //     cells[cell.x + 1][cell.y]["population"] += 1;
+                // }
+                // if (!(cell.y + 1 in cells[cell.x - 1])) {
+                //     cells[cell.x - 1][cell.y + 1] = {"population": 1, "value": 0};
+                // } else {
+                //     cells[cell.x - 1][cell.y + 1]["population"] += 1;
+                // }
+                // if (!(cell.y + 1 in cells[cell.x])) {
+                //     cells[cell.x][cell.y + 1] = {"population": 1, "value": 0};
+                // } else {
+                //     cells[cell.x][cell.y + 1]["population"] += 1;
+                // }
+                // if (!(cell.y + 1 in cells[cell.x + 1])) {
+                //     cells[cell.x + 1][cell.y + 1] = {"population": 1, "value": 0};
+                // } else {
+                //     cells[cell.x + 1][cell.y + 1]["population"] += 1;
+                // }
             }
         )
 

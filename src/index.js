@@ -33,7 +33,20 @@ function init() {
 
 	scene = new THREE.Scene();
 
-	population = evolveCreature(numCells, creatureWidth, numGenerations, populationSize);
+	// population = evolveCreature(numCells, creatureWidth, numGenerations, populationSize);
+
+	for (let i = 0; i < 10; i++) {
+		let creature = [];
+		let width = Math.floor(Math.random() * 20) * 2;
+		for (let j = 0; j < width; j++) {
+			creature.push([j, i * 2])
+		}
+		// gol.addCreature(glider(), width, 0);
+		gol.addCreature(generateGolCreatureFromSequence(creature), - width / 2, 0);
+	}
+	// gol.addCreature(generateGolCreatureFromSequence([[0, 0], [0, 1], [1, 0], [1, 1]]), 0, 0);
+
+	// gol.addCreature(generateGolCreatureFromCreature(generateRandomCreature(100, 40)), 0, 0);
 
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setSize( window.innerWidth, window.innerHeight );
